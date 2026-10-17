@@ -1,0 +1,283 @@
+# PRD: Pool Renovation Company Website
+## Design System: Aspelin Reitan (Candlelit Architectural Archive)
+## Stack: React 19 + TypeScript (TSX) + Tailwind CSS
+
+---
+
+## 1. Overview
+
+Build a marketing website for a pool renovation company using the **Aspelin Reitan** design system. The site should read like a curated portfolio of transformed outdoor spaces — full-bleed photography of renovated pools, cream editorial canvases, and whispered typography. The aesthetic is warm, architectural, and gallery-like — not a contractor lead-gen site with loud CTAs.
+
+**Core principle:** The pools and their surrounding architecture carry the brand. The UI is a quiet frame: hairline borders, outlined buttons, no shadows, no fills, no decoration.
+
+---
+
+## 2. Goals & Non-Goals
+
+### Goals
+- Present renovation work as an editorial portfolio of built places
+- Convey craft, warmth, and permanence through the Aspelin Reitan palette (cream, walnut, amber)
+- Drive inquiries through minimal outlined CTAs and a contact form
+- Work responsively from 320px to 1440px+
+- Ship as a typed, component-driven React application
+
+### Non-Goals
+- No e-commerce, pricing calculators, or booking systems
+- No blog/CMS beyond a static "Historier" section
+- No filled CTA buttons, gradients, shadows, icons, or illustrations
+- No display type above 40px, no weights above 500
+
+---
+
+## 3. Target Audience
+
+Homeowners and property managers with existing pools (residential, hotel, estate) considering a full renovation — tile replacement, resurfacing, decking, lighting, and landscape integration. They respond to taste and craftsmanship, not urgency banners.
+
+---
+
+## 4. Technical Stack (Mandatory)
+
+| Layer | Requirement |
+|---|---|
+| **Framework** | React **19** (use `react@^19`, `react-dom@^19`) |
+| **Language** | TypeScript, all components as **`.tsx`** files, `strict: true` |
+| **Styling** | **Tailwind CSS v4** using the `@theme` token block from the style reference verbatim |
+| **Routing** | React Router v7 (or framework-mode equivalent) — Home, Portfolio, Process, About, Contact |
+| **Build tool** | Vite (recommended) or Next.js 15 App Router — either is acceptable, but all page/component code must be `.tsx` |
+| **Fonts** | ModernEra if licensed; otherwise self-host Inter or GT America (weights 400/500 only) |
+| **Testing** | Vitest + React Testing Library for component tests; Playwright for one visual smoke test per page |
+
+### React 19 specifics
+- Use **function components + hooks only** — no class components
+- Prefer React 19 features where natural: `use()` for async data (project lists), `useActionState` for the contact form, `useOptimistic` if any stateful UI is added, ref as a prop (no `forwardRef`)
+- No legacy `forwardRef`, no `defaultProps`, no `PropTypes`
+- Typed props via `interface` / `type` for every component; no `any`
+
+### Tailwind specifics
+- Paste the `@theme` block from the style reference directly into `app.css` (or `index.css`), including all color, spacing, text-scale, and radius tokens
+- Use token classes only (`bg-warm-parchment`, `text-obsidian`, `text-display`, `gap-100`, `rounded-lg`) — **no arbitrary values** like `bg-[#ffebd0]` or `text-[40px]`
+- Enforce the 40px type ceiling and 500 weight ceiling via theme config; do not add larger text tokens
+- No Tailwind plugins that introduce shadows, gradients, or new colors
+
+---
+
+## 5. Design System Constraints (Non-Negotiable)
+
+These come directly from the style reference and must be enforced in every component:
+
+### Colors
+| Token | Value | Tailwind class | Use |
+|---|---|---|---|
+| Warm Parchment | `#ffebd0` | `warm-parchment` | Primary canvas |
+| Candlelight | `#fff8e9` | `candlelight` | Elevated cream surfaces |
+| Obsidian | `#000000` | `obsidian` | Text on cream; 1px borders |
+| Walnut Shell | `#2f2116` | `walnut-shell` | Dark sections, footer, photo base |
+| Aged Bronze | `#4f3622` | `aged-bronze` | Secondary dark surface/border |
+| Amber Glow | `#fee197` | `amber-glow` | Active nav state, single accent |
+| Muted Gold | `#987f61` | `muted-gold` | Link borders / underlines on dark |
+
+### Typography
+- **Single family:** ModernEra (substitute: Söhne, Inter, or GT America)
+- **Weights:** 400 and 500 only
+- **Scale:** 16 / 18 / 20 / 24 / 28 / 40px — **never exceed 40px**
+- **Line heights:** 1.17–1.40 per the scale table
+- Body text: 18px / 1.25 / weight 400
+
+### Shape & Elevation
+- Cards & images: **0px radius**, sharp corners, no shadows
+- Buttons & links: **8px radius**
+- No box-shadows anywhere; depth comes from color contrast and full-bleed photography
+
+### Spacing
+- Base unit 4px; spacing scale 8/12/16/20/24/36/40/60/64/100/120
+- Page max-width: **1200px**
+- Section gap: **100px**
+- Card padding: **40px**
+
+### Do / Don't Checklist (enforce in code review)
+- ✅ Outlined buttons only (1px Obsidian on cream, 1px Warm Parchment on dark)
+- ✅ Full-bleed photography as section anchors, no tint overlays
+- ✅ Warm Parchment canvas alternating with Walnut Shell editorial breaks
+- ❌ No filled CTAs, shadows, gradients, icons, or illustrations
+- ❌ No white text on Warm Parchment
+- ❌ No type above 40px or weight above 500
+- ❌ No arbitrary Tailwind values; tokens only
+
+---
+
+## 6. Site Map
+
+1. **Home** — full-bleed hero, services intro, featured projects, dark editorial break, contact CTA
+2. **Portefølje** (Portfolio) — grid of renovated pools with captions
+3. **Prosess** (Process) — how a renovation unfolds (cream canvas, two-column layouts)
+4. **Om Oss** (About) — company story, dark editorial section
+5. **Kontakt** (Contact) — inquiry form, footer
+
+*Bilingual note: Use Norwegian labels for nav ("Portefølje", "Meny", "Historier") to match the reference's tone, with English body copy if the client prefers, or keep fully localized.*
+
+---
+
+## 7. Page-by-Page Requirements
+
+### 7.1 Global Header
+- Transparent, floating over hero imagery
+- Wordmark `[COMPANY NAME]` top-left: ModernEra 500, 16–18px, Warm Parchment, wide letter-spacing
+- Nav top-right: outlined "Portefølje" button (1px Warm Parchment border, 8px radius, 16–18px h-padding, 6–8px v-padding) + "Meny" text label
+- Active nav item: 1px Amber Glow bottom border
+- No background fill; over cream sections, swap text/border colors to Obsidian
+
+### 7.2 Home — Hero (Full-Bleed Editorial Hero)
+- 100vh photograph of a renovated pool (golden-hour or amber-lit, warm temperature)
+- Headline bottom-left: 40px ModernEra 400, Warm Parchment, 40px inset from left/bottom
+- Supporting line: 16–18px ModernEra 400, Warm Parchment
+- No overlay tint, no scroll indicator icons
+
+### 7.3 Home — Services Section (Cream Canvas)
+- Background: Warm Parchment, 1200px max-width, 40px inner padding
+- Section heading: ModernEra 500, 24–28px, Obsidian, left-aligned, 40–100px space below
+- 3–4 service items (e.g., Re-tiling, Resurfacing, Decking, Lighting) presented as text blocks with ghost links (1px Obsidian bottom border, 8–12px padding-bottom)
+
+### 7.4 Home — Featured Projects (Portfolio Image Cards)
+- Single-column or two-column image grid on Warm Parchment
+- Images: full-column width, **no border, no radius, no shadow**
+- Caption below each: project name at 16px ModernEra 400, Obsidian, 40px padding around text block
+- 100px vertical gap between sections
+
+### 7.5 Home — Dark Editorial Break
+- Full-bleed warm-toned photograph with Walnut Shell base
+- Title top-left: ModernEra 400, 28–40px, Warm Parchment, 40px inset
+- Category label "Historier" top-right: 16px Warm Parchment
+- No gradient overlay
+
+### 7.6 Portfolio Page
+- Intro heading on Warm Parchment (24–28px, ModernEra 500)
+- Repeated Portfolio Image Cards; alternate single-column and two-column compositions
+- Each caption: project name + short location/scope line at 16px
+
+### 7.7 Project Detail — Two-Column Layout
+- Warm Parchment background, 40px padding around group
+- Left column ~40% width: square image (sharp corners)
+- Right column ~60%: wide exterior image
+- Caption below right image: 16px ModernEra 400, Obsidian, left-aligned
+
+### 7.8 Process Page
+- Alternating cream content blocks and dark photographic breaks
+- Numbered steps as plain text headings (24px ModernEra 500), body at 18px/1.25
+- Optional two-column image layout as in 7.7
+
+### 7.9 Contact Page
+- Cream canvas, centered 1200px container
+- Heading: 28px ModernEra 500, Obsidian
+- Form fields: transparent background, 1px Obsidian border, 8px radius, 16px padding, 16px ModernEra 400 text; placeholders at reduced opacity
+- Fields: Name, Email, Phone, Pool type (select), Message (textarea)
+- Submit: **Outlined Action Button (Cream Section)** — transparent fill, 1px Obsidian border, 8px radius, 18px h-padding, 16px v-padding, ModernEra 500 16px; hover fills Obsidian with Warm Parchment text
+- No success modal with icons — a plain text confirmation line below the form
+- **Implementation:** wire the form with React 19 `useActionState`; validate client-side; render pending/error/success states as plain text only
+
+### 7.10 Footer
+- Walnut Shell background, Warm Parchment text at 16px ModernEra 400
+- Single or two-column layout, 40px padding
+- Contact details, nav links (ghost links with Muted Gold bottom borders), and any CTA as an outlined button (1px Warm Parchment border)
+
+---
+
+## 8. Component Inventory (`.tsx`)
+
+All components live in `src/components/` and are typed:
+
+| Component | File | Notes |
+|---|---|---|
+| `Header` | `Header.tsx` | Accepts `theme: "dark" \| "light"` for overlay vs. cream sections |
+| `Hero` | `Hero.tsx` | Props: `image`, `headline`, `subline` |
+| `SectionHeading` | `SectionHeading.tsx` | Props: `children`, optional `as` |
+| `OutlinedButton` | `OutlinedButton.tsx` | Props: `variant: "onDark" \| "onCream"`, `href?`, `children`, `type?` — renders `<a>` or `<button>` |
+| `GhostLink` | `GhostLink.tsx` | Props: `href`, `theme`, `children` |
+| `PortfolioCard` | `PortfolioCard.tsx` | Props: `image`, `alt`, `title`, `meta?` |
+| `TwoColumnProject` | `TwoColumnProject.tsx` | Props: `leftImage`, `rightImage`, `caption` |
+| `DarkOverlaySection` | `DarkOverlaySection.tsx` | Props: `image`, `title`, `label?` |
+| `Input`, `Textarea`, `Select` | `Field.tsx` | Shared field styling component |
+| `Footer` | `Footer.tsx` | — |
+
+No component may introduce styles outside the token set. Each component gets a small Vitest + RTL test verifying correct classes and semantics.
+
+---
+
+## 9. Interaction & States
+
+| Element | Default | Hover | Active/Focus |
+|---|---|---|---|
+| Outlined button (dark bg) | 1px Warm Parchment border, transparent | Border brightens to Candlelight; no fill | Amber Glow border |
+| Outlined button (cream bg) | 1px Obsidian border, transparent | Fill Obsidian, text Warm Parchment | — |
+| Ghost link | 1px bottom border in context color | No color change; border stays — the line is the affordance | Amber Glow bottom border for nav |
+| Input | 1px border, transparent | — | 1px Amber Glow border |
+| Nav item | Plain text | — | 1px Amber Glow bottom border |
+
+Transitions: short (150–200ms), opacity/border-color only. No scale, no shadow animation. Respect `prefers-reduced-motion`.
+
+---
+
+## 10. Content Requirements
+
+- **Photography:** Minimum 8–12 high-quality images — renovated pools at golden hour, amber-lit evening shots, pool decks integrated with architecture, before/after pairs in two-column layouts. Warm color temperature mandatory. Documentary, not stock-aspirational.
+- **Copy tone:** Restrained, editorial, first-person plural ("Vi former steder..." / "We shape places..."). No exclamation marks, no urgency language.
+- **Wordmark:** Company name in all caps, wide letter-spacing.
+- **Captions:** Short — project name + location or one-line scope.
+
+---
+
+## 11. Responsive Behavior
+
+- **≥1024px:** Full layouts as specified; two-column grids active; header floats over hero.
+- **768–1023px:** Two-column layouts collapse to single column; hero headline stays 40px if it fits, else step to 28px; maintain 60–100px section gaps.
+- **<768px:** Single column throughout; 40px insets reduce to 24–36px; hero headline 28px; type scale unchanged otherwise (never below 16px body); header becomes wordmark + "Meny" label only (outlined button may move into a simple menu panel — still outlined, still flat).
+- Images always bleed to viewport edge on mobile, sharp corners retained.
+
+---
+
+## 12. Accessibility
+
+- Contrast: Obsidian on Warm Parchment and Warm Parchment on Walnut Shell both pass AA for body sizes. Amber Glow is accent-only — never body text on cream.
+- Focus states: 1px Amber Glow border/outline (visible on both canvases), never remove outline without replacement. Use `focus-visible` only.
+- All images require descriptive alt text naming the space and renovation scope.
+- Form labels always visible (no placeholder-only labels); fields typed and linked via `htmlFor`/`id`.
+- Respect `prefers-reduced-motion` — disable all transitions.
+
+---
+
+## 13. Technical Requirements
+
+- **Framework:** React 19 + TypeScript (all `.tsx`), Vite or Next.js 15 App Router
+- **Styling:** Tailwind CSS v4 with the `@theme` token block from the style reference pasted verbatim into the global stylesheet; token classes only, no arbitrary values
+- **Fonts:** Load ModernEra if licensed; otherwise self-host Inter or GT America with weights 400/500 only
+- **CSS variables:** The Tailwind `@theme` block must expose the exact tokens from the reference (`--color-warm-parchment`, `--text-display`, `--spacing-100`, `--radius-lg`, etc.)
+- **Images:** Serve responsive `srcset`, modern formats (AVIF/WebP), lazy-load below the fold. Hero images preloaded. Use `next/image` if on Next.js, or `<img srcset>` with Vite otherwise.
+- **Forms:** React 19 `useActionState` for the contact form; no third-party form library unless justified
+- **Testing:** Vitest + RTL component tests; Playwright screenshot smoke test per page (visual regression against the gallery rhythm)
+- **Performance:** Lighthouse ≥90 on mobile; no render-blocking third-party scripts
+- **SEO:** Semantic landmarks, one H1 per page, meta descriptions, Open Graph image per project
+
+---
+
+## 14. Acceptance Criteria
+
+The build is complete when:
+
+1. Project is React **19** + **TypeScript**, every UI file is `.tsx`, `strict: true`, zero `any`.
+2. Tailwind v4 is configured with the reference `@theme` block verbatim; a repo-wide search finds **no arbitrary color/size values** (`bg-[`, `text-[`, `w-[`, `h-[` only allowed for layout where no token exists — and reviewed case by case).
+3. Every button on the site is outlined — zero filled CTAs exist in default state (hover fill on cream-section buttons is the only exception, per spec).
+4. No element uses box-shadow, gradient, or border-radius other than 0px (images/cards) and 8px (buttons/links/inputs).
+5. No text renders above 40px or above weight 500 anywhere.
+6. Colors are limited to the seven tokens; Amber Glow appears only on active/focus states and nav accents.
+7. Sections alternate Warm Parchment and Walnut Shell full-bleed photography with 100px gaps at desktop.
+8. Hero is 100vh, full-bleed, no tint, with 40px bottom-left overlay text.
+9. Portfolio images are sharp-cornered and bleed to grid edges with no card containers.
+10. Contact form uses React 19 `useActionState`, transparent outlined inputs, and an outlined submit button with the specified hover fill.
+11. Passes WCAG AA contrast and keyboard navigation on all interactive elements.
+12. Responsive layouts verified at 320 / 768 / 1024 / 1440px.
+13. Vitest component tests pass; Playwright smoke screenshots render without layout regressions.
+
+---
+
+## 15. Reference Prompt for the Model
+
+> Build a multi-page pool renovation company website in **React 19 + TypeScript (all `.tsx`) + Tailwind CSS v4** that reads as a candlelit architectural archive. Use the `@theme` token block from the style reference verbatim — Warm Parchment (#ffebd0) as the dominant canvas and Walnut Shell (#2f2116) for dark editorial breaks. Every section is either a full-bleed warm-toned photograph of a renovated pool with a single line of Warm Parchment type bottom-left at 40px ModernEra 400, or a cream canvas with a 1200px contained content block and 40px padding. All buttons are outlined only — 1px borders, 8px radius, no fill except the cream-section hover state that fills Obsidian. No shadows, no gradients, no icons, no radius on images, no type above 40px. Maintain 100px section gaps, 18px/1.25 body text, and hairline borders as the only affordance for links. Use React 19 function components and hooks only; wire the contact form with `useActionState`; type every prop. Use Tailwind token classes exclusively — no arbitrary values. The photography does all the emotional work; the UI whispers.
